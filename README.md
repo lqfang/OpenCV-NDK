@@ -6,6 +6,8 @@
 
 2.通过引入封装的人脸检测库facesdk-release，实现图片的人脸检测框(FaceDetector)和关键点(FaceLandmark)
 
+3.后续会提供相机预览的人脸检测框和关键点等功能...
+
 环境准备：
 
 Android Studio 3.5
