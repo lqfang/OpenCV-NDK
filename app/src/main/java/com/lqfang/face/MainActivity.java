@@ -21,7 +21,7 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnLongClickListener {
 
     private ImageView imageView;
     private Button btnPreview;
@@ -36,23 +36,17 @@ public class MainActivity extends AppCompatActivity {
         imageView = (ImageView) findViewById(R.id.image);
         btnPreview = (Button) findViewById(R.id.btn_preview);
 
-        btnPreview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, PreviewActivity.class));
-            }
-        });
+        // Todo 长按，点击有问题
+        btnPreview.setOnLongClickListener(this);
 
         // ***************  获取人脸检测相关信息  ************
         faceNative = new FaceNative();
-        Log.e("tag", "faceNative====" + faceNative);
         // 加载模型，获取FD对象的值（long）
         faceNative.fd = faceNative.createFD(faceNative.getFDPath(this));
         // 加载模型，获取FL对象的值（long）
         faceNative.fl = faceNative.createFL(faceNative.getFLPath(this));
 
         String headPath = faceNative.getHeadPath(this);
-        Log.e("tag", "headPath====" + headPath);
         getRect(headPath);
     }
 
@@ -64,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap bitmap1 = BitmapFactory.decodeFile(pathName, options);
-        Log.e("tag", "bitmap1====" + bitmap1);
+//        Log.e("tag", "bitmap1====" + bitmap1);
         if (bitmap1 == null) return;
 
         mat1 = new Mat();
@@ -76,12 +70,10 @@ public class MainActivity extends AppCompatActivity {
 
         //得到当前一帧图像的内存地址
         long resultAddress = mat.getNativeObjAddr();
-        Log.e("tag", "resultAddress====" + Long.toHexString(resultAddress));
         if (resultAddress < 0) return;
 
         // 获取人脸矩形框的坐标值
         FaceInfo faceInfo = faceNative.detectRect(faceNative.fd, resultAddress);
-        Log.e("tag", "faceInfo====" + faceInfo);
         if (faceInfo != null) {
             // 定义一个左上角点坐标为(_x, _y)的_width*_height矩形窗口；
             Rect rect = new Rect(faceInfo.getX(), faceInfo.getY(), faceInfo.getWidth(), faceInfo.getHeight());
@@ -93,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
         // 获取人脸关键点定位的坐标值
         double[] point = faceNative.landmarkPoint(faceNative.fd, faceNative.fl, resultAddress);
-        Log.e("tag", "point====" + point.length);
         if (point != null) {
             // 返回了162个数，其实是81个点的坐标，所以i<点的个数
             for (int i = 0; i < point.length / 2; i++) {
@@ -111,13 +102,24 @@ public class MainActivity extends AppCompatActivity {
         // 将Mat转为Bitmap
         Utils.matToBitmap(mat2, bitmap1);
 
-        Log.e("tag", "bitmap===="+ bitmap1);
         imageView.setImageBitmap(bitmap1);
     }
 
+
     @Override
-    protected void onStop() {
-        super.onStop();
+    public boolean onLongClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_preview:
+                startActivity(new Intent(MainActivity.this, PreviewActivity.class));
+                break;
+
+        }
+        return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         // 销毁模型
         if (faceNative != null) {
             faceNative.destroyFD(faceNative.fd);
@@ -134,5 +136,6 @@ public class MainActivity extends AppCompatActivity {
             mat2 = null;
         }
     }
+
 
 }

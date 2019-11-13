@@ -6,7 +6,7 @@
 
 2.通过引入封装的人脸检测库facesdk-release，实现图片的人脸检测框(FaceDetector)和关键点(FaceLandmark)
 
-3.后续会提供相机预览的人脸检测框和关键点等功能...
+3.提供相机预览的人脸检测框和关键点等功能（首页长按进入）
 
 环境准备：
 
@@ -17,6 +17,12 @@ Cmake:3.10.2
 Android SDK:28.0.3
 
 NDK: r16b
+
+project下的：
+
+Android Gradle Plugin Vsersion： classpath 'com.android.tools.build:gradle:3.2.1'
+
+Gradle Version： 4.6
 
 依赖库：
 

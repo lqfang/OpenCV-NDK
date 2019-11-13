@@ -1,7 +1,6 @@
 package com.lqfang.face;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.hardware.Camera;
@@ -15,8 +14,6 @@ import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.lqfang.face.opengl.CameraOverlap;
@@ -36,21 +33,10 @@ public class PreviewActivity extends AppCompatActivity {
     private String[] denied;
     private String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
-    private Button btnPreview;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview);
-
-        btnPreview = (Button) findViewById(R.id.btn_preview);
-        btnPreview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(PreviewActivity.this, MainActivity.class));
-            }
-        });
-
 
         // 通过动态权限打开相机
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -105,7 +91,7 @@ public class PreviewActivity extends AppCompatActivity {
         // Todo 注意宽高的数值，宽要比高小
         mRect = new GLRect(mHeight, mWidth);
 
-        mBitmap = new GLBitmap(this, R.drawable.ic_camera);
+        mBitmap = new GLBitmap(this, R.drawable.ic_launcher);
         mHandlerThread = new HandlerThread("DrawFacePointsThread");
         mHandlerThread.start();
         mHandler = new Handler(mHandlerThread.getLooper());
@@ -207,14 +193,12 @@ public class PreviewActivity extends AppCompatActivity {
 
                         // 获取人脸矩形框的坐标值
                         FaceInfo faceInfo = faceNative.detect(faceNative.fd, data, mWidth, mHeight, 270);
-//                        Log.e("tag", "faceInfo====" + faceInfo);
 
                         // 获取人脸关键点定位的坐标值
                         double[] point = faceNative.landmark(faceNative.fd, faceNative.fl, data, mWidth, mHeight, 270);
 
                         // 预览相机中没有人像，就绘制相机
                         if(faceInfo == null || point == null){
-//                            mFrame.drawFrame(0, mFramebuffer.drawFrameBuffer(), mFramebuffer.getMatrix());
                             mEglUtils.swap();
                             return;
                         }
@@ -321,8 +305,8 @@ public class PreviewActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
         // 释放打开的相机资源
         if(cameraOverlap != null){
             cameraOverlap.release();
