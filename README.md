@@ -20,7 +20,7 @@ NDK: r16b
 
 project下的：
 
-Android Gradle Plugin Vsersion： classpath 'com.android.tools.build:gradle:3.2.1'
+Android Gradle Plugin Vsersion： 3.2.1
 
 Gradle Version： 4.6
 
