@@ -38,6 +38,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
         // Todo 长按，点击有问题
         btnPreview.setOnLongClickListener(this);
+        // 点击可以进去预览
+        btnPreview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, PreviewActivity.class));
+            }
+        });
 
         // ***************  获取人脸检测相关信息  ************
         faceNative = new FaceNative();
@@ -126,15 +133,15 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             faceNative.destroyFL(faceNative.fl);
             faceNative = null;
         }
-        if(mat != null){
-            mat = null;
-        }
-        if(mat1 != null){
-            mat1 = null;
-        }
-        if(mat2 != null){
-            mat2 = null;
-        }
+//        if(mat != null){
+//            mat = null;
+//        }
+//        if(mat1 != null){
+//            mat1 = null;
+//        }
+//        if(mat2 != null){
+//            mat2 = null;
+//        }
     }
 
 

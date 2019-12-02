@@ -15,8 +15,8 @@ android {
             cmake {
                 cppFlags "-std=c++11 -frtti -fexceptions"
                 abiFilters 'armeabi-v7a'
-                arguments "-DANDROID_STL=gnustl_static"
-//                arguments "-DANDROID_STL=c++_shared"
+//                arguments "-DANDROID_STL=gnustl_static"
+                arguments "-DANDROID_STL=c++_shared"
             }
             ndk {
                 abiFilters 'armeabi-v7a'
